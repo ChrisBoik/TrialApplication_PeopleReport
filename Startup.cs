@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TrialApplication_PeopleReport.AppDbContext;
 
 namespace TrialApplication_PeopleReport
 {
@@ -27,7 +29,12 @@ namespace TrialApplication_PeopleReport
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddDbContext<PersonContext>(options =>
+        options.UseSqlServer(Configuration.GetConnectionString("PersonInfoContext")));
+
+            services.AddControllers()
+                // Required to avoid camel-casing (or other casing changes) to property names
+                .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TrialApplication_PeopleReport", Version = "v1" });
