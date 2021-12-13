@@ -134,6 +134,28 @@ namespace TrialApplication_PeopleReport.Controllers
         }
 
         /*
+         * Fetch Specific Person
+         * 
+         * Accepts an existing person's Id and retrieves the persons information
+         *      from the database
+         *  
+         *  Returns the person or a 404-not-found error if no person
+         *      with provided Id exists.
+         * 
+         */
+        [HttpGet("{id}")]
+        public async Task<IActionResult> FetchPerson(int id)
+        {
+            var person = await _context.People.FindAsync(id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            return AcceptedAtAction(nameof(FetchPerson), new { id = person.Id }, person);
+        }
+
+        /*
          * (internal)
          * Person Exists
          * 
