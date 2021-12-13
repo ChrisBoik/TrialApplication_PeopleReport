@@ -39,7 +39,6 @@ namespace TrialApplication_PeopleReport.Controllers
         }
 
         [HttpPost]
-        //[Route("test")]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
             _context.Add(person);
