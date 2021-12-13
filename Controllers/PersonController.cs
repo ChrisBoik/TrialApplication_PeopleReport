@@ -24,12 +24,24 @@ namespace TrialApplication_PeopleReport.Controllers
             _context = context;
         }
 
+        /*
+         * Get People
+         * 
+         * Returns an array of all the people stored in the database
+         * 
+         */
         [HttpGet]
         public IEnumerable<Person> Get()
         {
             return _context.People.ToArray();
         }
 
+        /*
+         * Get Birthdays in Months
+         * 
+         * Returns an array of months and number of birthdays in respective months
+         * 
+         */
         [HttpGet]
         [Route("birthdays")]
         public List<MonthBirthdays> GetBirthdays()
@@ -38,6 +50,15 @@ namespace TrialApplication_PeopleReport.Controllers
             new MonthBirthdays(group.Key, group.Count())).ToList();
         }
 
+        /*
+         * Create Person
+         * 
+         * Accepts a qualified person object (sans-Id) and adds a new person with those
+         *  details to the database.
+         *  
+         *  Returns the fully qualified person and the persons Id.
+         * 
+         */
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
@@ -48,6 +69,16 @@ namespace TrialApplication_PeopleReport.Controllers
             return CreatedAtAction(nameof(PostPerson), new { id = person.Id }, person);
         }
 
+        /*
+         * Delete Person
+         * 
+         * Accepts an existing person's Id and removes that person's
+         *      details from the database.
+         *  
+         *  Returns no content or a 404-not-found error if no person
+         *      with provided Id exists.
+         * 
+         */
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(int id)
         {
@@ -63,6 +94,16 @@ namespace TrialApplication_PeopleReport.Controllers
             return NoContent();
         }
 
+        /*
+         * Edit Person
+         * 
+         * Accepts a qualified person object (sans-Id) and updates
+         *      an existing person with the new details provided.
+         *  
+         *  Returns no content (204) or a 400-bad-request error if no person
+         *      with provided Id exists.
+         * 
+         */
         [HttpPut("{id}")]
         public async Task<IActionResult> EditPerson(int id, Person person)
         {
@@ -92,6 +133,15 @@ namespace TrialApplication_PeopleReport.Controllers
             return NoContent();
         }
 
+        /*
+         * (internal)
+         * Person Exists
+         * 
+         * Checks if a person with the provided Id exists in the database.
+         *  
+         *  Returns a boolean response indicating the existence of the user in the database.
+         * 
+         */
         private bool PersonExists(int id)
         {
             return _context.People.Any(e => e.Id == id);
